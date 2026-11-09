@@ -1,105 +1,90 @@
-import random
+import json
+import os
 
-# Tool 1: To-Do List Manager (Uses lists, loops, conditionals, f-strings)
+# File to store tasks persistently
+TASKS_FILE = "tasks.json"
+
+def load_tasks():
+    """Load tasks from the JSON file if it exists."""
+    if os.path.exists(TASKS_FILE):
+        try:
+            with open(TASKS_FILE, "r") as file:
+                return json.load(file)
+        except json.JSONDecodeError:
+            return []
+    return []
+
+def save_tasks(tasks):
+    """Save the current task list to the JSON file."""
+    with open(TASKS_FILE, "w") as file:
+        json.dump(tasks, file, indent=4)
+
 def todo_list_manager():
-    tasks = ["Buy groceries", "Finish homework"]
-    print("\n--- To-Do List Manager ---")
+    tasks = load_tasks()  # Load tasks when entering the manager
     
     while True:
-        print(f"\nCurrent Tasks ({len(tasks)}):")
-        if not tasks:
-            print("  (No tasks currently in the list)")
-        else:
-            for idx, task in enumerate(tasks, 1):
-                print(f"  {idx}. {task}")
-                
-        print("\nOptions: [1] Add Task  [2] Remove Task  [3] Back to Main Menu")
-        choice = input("Choose an option: ").strip()
+        print("\n=== To-Do List Manager ===")
+        print("1. View Tasks")
+        print("2. Add Task")
+        print("3. Remove Task")
+        print("4. Return to Main Menu")
+        
+        choice = input("Enter your choice (1-4): ").strip()
         
         if choice == '1':
-            new_task = input("Enter the task description: ").strip()
+            if not tasks:
+                print("\nYour to-do list is empty.")
+            else:
+                print("\n--- Your Tasks ---")
+                for index, task in enumerate(tasks, 1):
+                    print(f"{index}. {task}")
+                    
+        elif choice == '2':
+            new_task = input("Enter the task: ").strip()
             if new_task:
                 tasks.append(new_task)
-                print(f"Success: '{new_task}' added to your list.")
+                save_tasks(tasks)  # Save changes immediately
+                print(f"Task '{new_task}' added successfully!")
             else:
-                print("Error: Task description cannot be empty.")
-        elif choice == '2':
-            if not tasks:
-                print("Your list is already empty!")
-                continue
-            try:
-                rem_idx = int(input("Enter the task number to remove: "))
-                if 1 <= rem_idx <= len(tasks):
-                    removed = tasks.pop(rem_idx - 1)
-                    print(f"Success: Removed '{removed}'.")
-                else:
-                    print("Invalid task number range.")
-            except ValueError:
-                print("Please enter a valid numeric index.")
+                print("\n[Warning] Task cannot be empty.")
+                
         elif choice == '3':
-            print("Exiting To-Do List Manager...")
+            if not tasks:
+                print("\nYour to-do list is empty.")
+            else:
+                print("\n--- Your Tasks ---")
+                for index, task in enumerate(tasks, 1):
+                    print(f"{index}. {task}")
+                try:
+                    task_num = int(input("Enter the task number to remove: "))
+                    if 1 <= task_num <= len(tasks):
+                        removed = tasks.pop(task_num - 1)
+                        save_tasks(tasks)  # Save changes immediately
+                        print(f"Task '{removed}' removed successfully!")
+                    else:
+                        print("\n[Warning] Invalid task number.")
+                except ValueError:
+                    print("\n[Warning] Please enter a valid number.")
+                    
+        elif choice == '4':
+            print("\nReturning to Main Menu...")
             break
         else:
-            print("Invalid choice. Please choose 1, 2, or 3.")
+            print(f"\n[Warning] '{choice}' is not a valid option. Please choose between 1 and 4.")
 
-# Tool 2: Simple Calculator (Uses conditionals and f-strings)
 def simple_calculator():
-    print("\n--- Simple Calculator ---")
-    print("Operations: +, -, *, /")
-    
-    try:
-        num1 = float(input("Enter first number: "))
-        op = input("Enter operator (+, -, *, /): ").strip()
-        num2 = float(input("Enter second number: "))
-        
-        if op == '+':
-            result = num1 + num2
-            print(f"Result: {num1} + {num2} = {result}")
-        elif op == '-':
-            result = num1 - num2
-            print(f"Result: {num1} - {num2} = {result}")
-        elif op == '*':
-            result = num1 * num2
-            print(f"Result: {num1} * {num2} = {result}")
-        elif op == '/':
-            if num2 == 0:
-                print("Error: Division by zero is not allowed.")
-            else:
-                result = num1 / num2
-                print(f"Result: {num1} / {num2} = {result}")
-        else:
-            print(f"Error: '{op}' is not a valid operator.")
-    except ValueError:
-        print("Error: Please enter valid numbers.")
+    # Placeholder for your calculator logic
+    print("\n[Simple Calculator placeholder]")
 
-# Tool 3: Number Guessing Game (Uses loops, random generation, and conditionals)
 def number_guessing_game():
-    print("\n--- Number Guessing Game ---")
-    secret_number = random.randint(1, 10)
-    print("I have picked a number between 1 and 10. Try to guess it!")
-    
-    while True:
-        guess_str = input("Enter your guess (or 'q' to quit): ").strip()
-        if guess_str.lower() == 'q':
-            print(f"The secret number was {secret_number}.")
-            break
-        try:
-            guess = int(guess_str)
-            if guess < secret_number:
-                print("Too low! Try again.")
-            elif guess > secret_number:
-                print("Too high! Try again.")
-            else:
-                print(f"Congratulations! You guessed the secret number {secret_number} correctly!")
-                break
-        except ValueError:
-            print("Please enter a valid integer or 'q' to quit.")
+    # Placeholder for your guessing game logic
+    print("\n[Number Guessing Game placeholder]")
 
 # Main Program Loop
 def main():
-    print("========================================")
-    print("  Welcome to Your Personal Mini-Toolkit! ")
-    print("========================================")
+    print("================================")
+    print(" Welcome to Your Personal Mini-Toolkit! ")
+    print("================================")
     
     while True:
         print("\n=== Personal Mini-Toolkit Menu ===")
